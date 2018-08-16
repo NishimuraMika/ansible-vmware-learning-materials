@@ -1,0 +1,19 @@
+---
+- name: Create vCenter deploy parameter json.
+  template:
+    src: embedded_vcsa_on_esxi.j2
+    dest: "{{ playbook_dir }}/tmp/embedded_vcsa_on_esxi.json"
+
+- name: vCenter Deploy Task.
+  shell: "./vcsa-deploy install --accept-eula --no-ssl-certificate-verification {{ playbook_dir }}/tmp/embedded_vcsa_on_esxi.json"
+  args:
+    chdir: "{{ vcenter_deploy_cmd_dir }}"
+  register: r
+
+- name: vCenter Deploy Log.
+  copy:
+    content: "{{ r.stdout }}"
+    dest: "{{ playbook_dir }}/log/{{ now_date }}-vcenter-deploy.log"
+
+#- name: Check vCenter Status.
+#- name: add ESXi to vCenter.

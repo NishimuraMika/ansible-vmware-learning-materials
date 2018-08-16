@@ -1,0 +1,10 @@
+---
+- name: Ansible VMware Module Learning Environment Deploy.
+  hosts: all
+  gather_facts: no
+  vars:
+    now_date: "{{ lookup('pipe', 'date +%Y%m%d%H%M') }}"
+  roles:
+    - esxi-deploy
+    - vcenter-deploy
+    #wip: - jupyter-deploy

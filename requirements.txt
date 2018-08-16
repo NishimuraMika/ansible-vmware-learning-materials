@@ -1,0 +1,4 @@
+pyvmomi
+requests
+xmltodict
+

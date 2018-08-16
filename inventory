@@ -1,0 +1,73 @@
+[all]
+localhost   ansible_connection=local
+
+[all:vars]
+# Rquired all params.
+# ESXi(base ESXi) params required for vm(ESXi and VCSA) deployment.
+esxi_host = ""
+esxi_username = ""
+esxi_password = ""
+
+# ESXi ovf path to be deployed as VM.
+esxi_ovf_path = ""
+
+# Nested ESXi VM Params.
+esxi_vm_name = ""
+esxi_cpu_core = ""
+esxi_cpu_socket = ""
+esxi_memory_mb = ""
+esxi_deployment_networks = [{"name": "VM Network"}] # PortGroup name to attach.
+esxi_deployment_datastore = "" # Storage name to deploy.
+
+# Nested ESXi Guest OS Params.
+esxi_guest_os_username = ""
+esxi_guest_os_password = ""
+esxi_guest_ip = ""
+esxi_guest_netmask = ""
+esxi_guest_gateway = ""
+# wip: esxi_guest_hostname = ""
+# wip: esxi_license = ""
+
+# vCenter Dir.
+# Specify the path where vcsa-deploy is stored.
+# Ex: $vcsa_path/vcsa-cli-installer/mac
+vcenter_deploy_cmd_dir = ""
+
+# vCenter(VCSA) deploy to ESXi.
+vcenter_deployment_network_name = "VM Network" # PortGroup name to attach.
+vcenter_deployment_datastore_name = "datastore1" # Storage name to deploy.
+thin_disk_mode = true
+vcenter_size = "small" # Please refer to the vCenter Size
+vcenter_vm_name = "" # VM name.
+# wipe: vcenter_license = ""
+
+# vCenter(VCSA) OS Params.
+vcenter_os_password = ""
+ip_family = "ipv4"
+mode = "static"
+ip = ""
+dns_servers = '[""]'
+prefix = ""
+gateway = ""
+vcenter_hostname = "" # vCenter FQDN or IP address. FQDN needs to be able to resolve names from DNS.
+ntp_servers = ""
+ssh_enable = true
+
+# vCenter(VCSA) SSO Params.
+sso_password = ""
+sso_domain_name = "vsphere.local"
+
+# vCenter(VCSA) CEIP.
+ceip_enabled = false
+
+# additional explanation
+# 
+# vCenter Size(From VCSA 6.7)
+# 
+# | Deployment Size | vCPUs | Memory(GB) | Storage | Hosts |  VMs  |
+# |-----------------|-------|------------|---------|-------|-------|
+# | tiny            |     2 |         10 |     300 |    10 |   100 |
+# | small           |     4 |         16 |     340 |   100 |  1000 |
+# | medium          |     8 |         24 |     525 |   400 |  4000 |
+# | large           |    16 |         32 |     740 |  1000 | 10000 |
+# | x-large         |    24 |         48 |    1180 |  2000 | 35000 |

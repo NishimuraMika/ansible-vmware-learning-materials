@@ -1,0 +1,41 @@
+{
+    "__version": "2.13.0",
+    "__comments": "vCenter Template to deploy VMware learning environment.",
+    "new_vcsa": {
+        "esxi": {
+            "hostname": "{{ esxi_guest_ip }}",
+            "username": "{{ esxi_guest_os_username }}",
+            "password": "{{ esxi_guest_os_password }}",
+            "deployment_network": "{{ vcenter_deployment_network_name }}",
+            "datastore": "{{ vcenter_deployment_datastore_name }}"
+        },
+        "appliance": {
+            "thin_disk_mode": {{ thin_disk_mode }},
+            "deployment_option": "{{ vcenter_size }}",
+            "name": "{{ vcenter_vm_name }}"
+        },
+        "network": {
+            "ip_family": "{{ ip_family }}",
+            "mode": "{{ mode }}",
+            "ip": "{{ ip }}",
+            "dns_servers": {{ dns_servers }},
+            "prefix": "{{ prefix }}",
+            "gateway": "{{ gateway }}",
+            "system_name": "{{ vcenter_hostname }}"
+        },
+        "os": {
+            "password": "{{ vcenter_os_password }}",
+            "ntp_servers": "{{ ntp_servers }}",
+            "ssh_enable": {{ ssh_enable }}
+        },
+        "sso": {
+            "password": "{{ sso_password }}",
+            "domain_name": "{{ sso_domain_name }}"
+        }
+    },
+    "ceip": {
+        "settings": {
+            "ceip_enabled": {{ ceip_enabled }}
+        }
+    }
+}

@@ -1,0 +1,86 @@
+---
+- name: ESXi deploy task.
+  vmware_ovftool:
+    hostname: "{{ esxi_host }}"
+    username: "{{ esxi_username }}"
+    password: "{{ esxi_password }}"
+    validate_certs: no
+    method: deploy
+    compute_resource: "{{ esxi_host }}"
+    name: "{{ esxi_vm_name }}"
+    path: "{{ esxi_ovf_path }}"
+    datastore: "{{ esxi_deployment_datastore }}"
+
+- name: ESXi resource and network reconfig.
+  vmware_guest:
+    hostname: "{{ esxi_host }}"
+    username: "{{ esxi_username }}"
+    password: "{{ esxi_password }}"
+    validate_certs: no
+    name: "{{ esxi_vm_name }}"
+    hardware:
+      num_cpus: "{{ esxi_cpu_core }}"
+      num_cpu_cores_per_socket: "{{ esxi_cpu_socket }}"
+      memory_mb: "{{ esxi_memory_mb }}"
+    networks: "{{ esxi_deployment_networks }}"
+
+- name: ESXi enable nested virtualization.
+  vmware_guest:
+    hostname: "{{ esxi_host }}"
+    username: "{{ esxi_username }}"
+    password: "{{ esxi_password }}"
+    validate_certs: no
+    name: "{{ esxi_vm_name }}"
+    hardware:
+      nested_virt: yes
+
+- name: ESXi PowredOn.
+  vmware_guest:
+    hostname: "{{ esxi_host }}"
+    username: "{{ esxi_username }}"
+    password: "{{ esxi_password }}"
+    validate_certs: no
+    name: "{{ esxi_vm_name }}"
+    state: poweredon
+
+- name: ESXi VMware tools wait.
+  vmware_guest_tools_wait:
+    hostname: "{{ esxi_host }}"
+    username: "{{ esxi_username }}"
+    password: "{{ esxi_password }}"
+    validate_certs: no
+    name: "{{ esxi_vm_name }}"
+
+- name: Set ESXi Network.
+  vmware_vm_shell:
+    hostname: "{{ esxi_host }}"
+    username: "{{ esxi_username }}"
+    password: "{{ esxi_password }}"
+    validate_certs: no
+    vm_id: "{{ esxi_vm_name }}"
+    vm_username: "{{ esxi_guest_os_username }}"
+    vm_password: "{{ esxi_guest_os_password }}"
+    vm_shell: /bin/esxcli
+    vm_shell_args: "network ip interface ipv4 set -i vmk0 -I {{ esxi_guest_ip }} -N {{ esxi_guest_netmask }} -t static"
+
+- name: ESXi VMware tools wait.
+  vmware_guest_tools_wait:
+    hostname: "{{ esxi_host }}"
+    username: "{{ esxi_username }}"
+    password: "{{ esxi_password }}"
+    validate_certs: no
+    name: "{{ esxi_vm_name }}"
+
+- name: Set ESXi default gateway.
+  vmware_vm_shell:
+    hostname: "{{ esxi_host }}"
+    username: "{{ esxi_username }}"
+    password: "{{ esxi_password }}"
+    validate_certs: no
+    vm_id: "{{ esxi_vm_name }}"
+    vm_username: "{{ esxi_guest_os_username }}"
+    vm_password: "{{ esxi_guest_os_password }}"
+    vm_shell: /bin/esxcfg-route
+    vm_shell_args: "-a 0.0.0.0 0.0.0.0 {{ esxi_guest_gateway }}"
+
+#- name: Set ESXi hostname.
