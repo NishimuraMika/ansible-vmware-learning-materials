@@ -1,0 +1,37 @@
+---
+- name: Download of VMware VM OVF.
+  hosts: localhost
+  gather_facts: no
+  vars:
+    # ESXi or vCenter Hostname or IP.
+    hostname: 
+    # ESXi or vCenter login username.
+    username: 
+    # ESXi or vCenter login password.
+    password: 
+    # Specify ESXi VM name to download.
+    target_esxi_vm_name: 
+    # Specify Linux VM name to download.
+    target_linux_vm_name:
+  tasks:
+    - name: Download ESXi OVF.
+      vmware_ovftool:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: no
+        method: download
+        name: "{{ target_esxi_vm_name }}"
+        path: ./deploy_files/esxi_ovf/
+      when: target_esxi_vm_name is defined
+
+    - name: Download Linux OVF.
+      vmware_ovftool:
+        hostname: "{{ hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        validate_certs: no
+        method: download
+        name: "{{ target_linux_vm_name }}"
+        path: ./deploy_files/linux_ovf/
+      when: target_linux_vm_name is defined

@@ -9,7 +9,7 @@ esxi_username = ""
 esxi_password = ""
 
 # ESXi ovf path to be deployed as VM.
-esxi_ovf_path = ""
+esxi_ovf_path = "./deploy_files/esxi_ovf/"
 
 # Nested ESXi VM Params.
 esxi_vm_name = ""
@@ -30,7 +30,8 @@ esxi_guest_gateway = ""
 
 # vCenter Dir.
 # Specify the path where vcsa-deploy is stored.
-# Ex: $vcsa_path/vcsa-cli-installer/mac
+# Ex: vcenter_deploy_cmd_dir = "./deploy_files/vcenter/vcsa-cli-installer/lin64"
+# Ex: vcenter_deploy_cmd_dir = "./deploy_files/vcenter/vcsa-cli-installer/mac"
 vcenter_deploy_cmd_dir = ""
 
 # vCenter(VCSA) deploy to ESXi.
