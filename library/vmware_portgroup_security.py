@@ -29,52 +29,25 @@ options:
             - Specify False to enable Reject.
             - Specify Null for Inherit from vSwitch.
         choices: [True, False, Null]
+        required: True
     mac_address_changes:
         description:
             - Specify True to enable Accept.
             - Specify False to enable Reject.
             - Specify Null for Inherit from vSwitch.
         choices: [True, False, Null]
+        required: True
     forged_transmits:
         description:
             - Specify True to enable Accept.
             - Specify False to enable Reject.
             - Specify Null for Inherit from vSwitch.
         choices: [True, False, Null]
+        required: True
 '''
 
 EXAMPLES='''
 ---
-- name: Example of accept promiscuous_mode.
-  vmware_portgroup_security:
-    hostname: vCenter or ESXi
-    username: username
-    password: secret
-    validate_certs: no
-    esxi_hostname: esxi-03.local
-    pg_name: VM Network
-    promiscuous_mode: yes
-    
-- name: Example of reject promiscuous_mode.
-  vmware_portgroup_security:
-    hostname: vCenter or ESXi
-    username: username
-    password: secret
-    validate_certs: no
-    esxi_hostname: esxi-03.local
-    pg_name: VM Network
-    promiscuous_mode: no
-
-- name: Example of inherit promiscuous_mode.
-  vmware_portgroup_security:
-    hostname: vCenter or ESXi
-    username: username
-    password: secret
-    validate_certs: no
-    esxi_hostname: esxi-03.local
-    pg_name: VM Network
-    promiscuous_mode: Null
-
 - name: Example of changing all modes.
   vmware_portgroup_security:
     hostname: vCenter or ESXi
@@ -135,9 +108,9 @@ def main():
     argument_spec = vmware_argument_spec()
     argument_spec.update(esxi_hostname=dict(type=str, required=True),
                          pg_name=dict(type=str, required=True),
-                         promiscuous_mode=dict(choices=[True, False, None]),
-                         mac_address_changes=dict(choices=[True, False, None]),
-                         forged_transmits=dict(choices=[True, False, None]))
+                         promiscuous_mode=dict(choices=[True, False, None], required=True),
+                         mac_address_changes=dict(choices=[True, False, None], required=True),
+                         forged_transmits=dict(choices=[True, False, None], required=True))
 
     module = AnsibleModule(argument_spec=argument_spec, supports_check_mode=True)
 

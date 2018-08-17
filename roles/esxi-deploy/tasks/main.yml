@@ -94,3 +94,5 @@
     esxi_hostname:
     pg_name: "{{ esxi_deployment_networks[0].name }}"
     promiscuous_mode: yes
+    forged_transmits: Null
+    mac_address_changes: Null
