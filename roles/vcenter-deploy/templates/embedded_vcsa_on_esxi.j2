@@ -10,32 +10,32 @@
             "datastore": "{{ vcenter_deployment_datastore_name }}"
         },
         "appliance": {
-            "thin_disk_mode": {{ thin_disk_mode }},
+            "thin_disk_mode": {{ vcenter_thin_disk_mode }},
             "deployment_option": "{{ vcenter_size }}",
             "name": "{{ vcenter_vm_name }}"
         },
         "network": {
-            "ip_family": "{{ ip_family }}",
-            "mode": "{{ mode }}",
-            "ip": "{{ ip }}",
-            "dns_servers": {{ dns_servers }},
-            "prefix": "{{ prefix }}",
-            "gateway": "{{ gateway }}",
+            "ip_family": "{{ vcenter_ip_family }}",
+            "mode": "{{ vcenter_ip_mode }}",
+            "ip": "{{ vcenter_ip }}",
+            "dns_servers": {{ vcenter_dns_servers }},
+            "prefix": "{{ vcenter_prefix }}",
+            "gateway": "{{ vcenter_gateway }}",
             "system_name": "{{ vcenter_hostname }}"
         },
         "os": {
             "password": "{{ vcenter_os_password }}",
-            "ntp_servers": "{{ ntp_servers }}",
-            "ssh_enable": {{ ssh_enable }}
+            "ntp_servers": "{{ vcenter_ntp_servers }}",
+            "ssh_enable": {{ vcenter_ssh_enable }}
         },
         "sso": {
-            "password": "{{ sso_password }}",
-            "domain_name": "{{ sso_domain_name }}"
+            "password": "{{ psc_sso_password }}",
+            "domain_name": "{{ psc_sso_domain_name }}"
         }
     },
     "ceip": {
         "settings": {
-            "ceip_enabled": {{ ceip_enabled }}
+            "ceip_enabled": {{ vcenter_ceip_enabled }}
         }
     }
 }

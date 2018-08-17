@@ -16,4 +16,3 @@
     dest: "{{ playbook_dir }}/log/{{ now_date }}-vcenter-deploy.log"
 
 #- name: Check vCenter Status.
-#- name: add ESXi to vCenter.

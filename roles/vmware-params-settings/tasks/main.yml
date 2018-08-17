@@ -1,0 +1,26 @@
+---
+- name: Add Datacenter to vCenter.
+  vmware_datacenter:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    datacenter_name: "{{ datacenter_name }}"
+    state: present
+
+- name: Add ESXi host to vCenter.
+  vmware_host:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    folder: "/{{ datacenter_name }}/host"
+    datacenter_name: "{{ datacenter_name }}"
+    esxi_hostname: "{{ esxi_guest_ip }}"
+    esxi_username: "{{ esxi_guest_os_username }}"
+    esxi_password: "{{ esxi_guest_os_password }}"
+    state: present
+    add_connected: True
+
+#-name: Add License to ESXi
+#-name: Add License to vCenter

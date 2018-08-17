@@ -36,29 +36,33 @@ vcenter_deploy_cmd_dir = ""
 # vCenter(VCSA) deploy to ESXi.
 vcenter_deployment_network_name = "VM Network" # PortGroup name to attach.
 vcenter_deployment_datastore_name = "datastore1" # Storage name to deploy.
-thin_disk_mode = true
+vcenter_thin_disk_mode = true
 vcenter_size = "small" # Please refer to the vCenter Size
 vcenter_vm_name = "" # VM name.
 # wipe: vcenter_license = ""
 
 # vCenter(VCSA) OS Params.
+vcenter_os_username = "administrator@vsphere.local"
 vcenter_os_password = ""
-ip_family = "ipv4"
-mode = "static"
-ip = ""
-dns_servers = '[""]'
-prefix = ""
-gateway = ""
+vcenter_ip_family = "ipv4"
+vcenter_ip_mode = "static"
+vcenter_ip = ""
+vcenter_dns_servers = '[""]'
+vcenter_prefix = ""
+vcenter_gateway = ""
 vcenter_hostname = "" # vCenter FQDN or IP address. FQDN needs to be able to resolve names from DNS.
-ntp_servers = ""
-ssh_enable = true
+vcenter_ntp_servers = ""
+vcenter_ssh_enable = true
 
-# vCenter(VCSA) SSO Params.
-sso_password = ""
-sso_domain_name = "vsphere.local"
+# PSC Params.
+psc_sso_password = ""
+psc_sso_domain_name = "vsphere.local"
 
 # vCenter(VCSA) CEIP.
-ceip_enabled = false
+vcenter_ceip_enabled = false
+
+# vCenter Params.
+datacenter_name = ""
 
 # additional explanation
 # 
