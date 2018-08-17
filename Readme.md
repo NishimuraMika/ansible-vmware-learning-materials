@@ -9,7 +9,7 @@ VMwareを使ってAnsibleを学習するための環境を準備するPlaybook�
 ![](./img/learning_tenant.png)
 
 ハイパーバイザー(ESXi)をネストして学習用の環境を構築します。  
-ベースとなるESXiホストを準備し、その上に自動で学習テナントを構築します。  
+ベースとなるESXiホストを準備し、その上に自動で学習用テナントを構築します。  
 イメージは上図のようにマルチテナントで専用学習環境を準備します。  
 学習対象者は[Jupyter](http://jupyter.org/)と[Ansible Jupyter Kernel](https://github.com/ansible/ansible-jupyter-kernel)を使ってAnsibleを操作することを想定しています。
 
