@@ -35,3 +35,4 @@
         name: "{{ target_linux_vm_name }}"
         path: ./deploy_files/linux_ovf/
       when: target_linux_vm_name is defined
+
