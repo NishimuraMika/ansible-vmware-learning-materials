@@ -1,0 +1,295 @@
+---
+- name: Linux deploy task.
+  vmware_ovftool:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    method: deploy
+    datacenter: "{{ datacenter_name }}"
+    compute_resource: "{{ esxi_guest_ip }}"
+    name: "{{ jupyter_vm_name }}"
+    path: "{{ linux_ovf_path }}"
+    datastore: "{{ jupyter_deployment_datastore }}"
+
+- name: Linux resource and network reconfig.
+  vmware_guest:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    name: "{{ jupyter_vm_name }}"
+    hardware:
+      num_cpus: "{{ jupyter_cpu_core }}"
+      num_cpu_cores_per_socket: "{{ jupyter_cpu_socket }}"
+      memory_mb: "{{ jupyter_memory_mb }}"
+    networks: "{{ jupyter_deployment_networks }}"
+
+- name: Linux PowredOn.
+  vmware_guest:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    name: "{{ jupyter_vm_name }}"
+    state: poweredon
+
+- name: Linux VMware tools wait.
+  vmware_guest_tools_wait:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    name: "{{ jupyter_vm_name }}"
+
+- name: Set Linux network.
+  vmware_vm_shell:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_guest_os_username }}"
+    vm_password: "{{ jupyter_guest_os_password }}"
+    vm_shell: /usr/bin/nmcli
+    vm_shell_args: "c m {{ jupyter_guest_nw_interface }} connect.autoconnect yes ipv4.method manual ipv4.address {{ jupyter_guest_ip }}/{{ jupyter_guest_prefix }} ipv4.gateway {{ jupyter_guest_gateway }} ipv4.dns {{ jupyter_dns_servers }}"
+
+- name: Active Linux network.
+  vmware_vm_shell:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_guest_os_username }}"
+    vm_password: "{{ jupyter_guest_os_password }}"
+    vm_shell: /usr/bin/nmcli
+    vm_shell_args: "c u {{ jupyter_guest_nw_interface }}"
+
+- name: Install epel-release RPM package.
+  vmware_vm_shell:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_guest_os_username }}"
+    vm_password: "{{ jupyter_guest_os_password }}"
+    vm_shell: /bin/yum
+    vm_shell_args: "install -y epel-release"
+
+- name: Check Install epel-release RPM package task.
+  vmware_vm_shell_wait:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_guest_os_username }}"
+    vm_password: "{{ jupyter_guest_os_password }}"
+    vm_shell: /bin/yum
+    vm_shell_args: "install -y epel-release"
+
+- name: Install RPMs package.
+  vmware_vm_shell:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_guest_os_username }}"
+    vm_password: "{{ jupyter_guest_os_password }}"
+    vm_shell: /bin/yum
+    vm_shell_args: "install -y python2-pip gcc python-devel python-docutils git"
+
+- name: Check Install RPMs package task.
+  vmware_vm_shell_wait:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_guest_os_username }}"
+    vm_password: "{{ jupyter_guest_os_password }}"
+    vm_shell: /bin/yum
+    vm_shell_args: "install -y python2-pip gcc python-devel python-docutils git"
+
+- name: Install pthon modules.
+  vmware_vm_shell:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_guest_os_username }}"
+    vm_password: "{{ jupyter_guest_os_password }}"
+    vm_shell: /usr/bin/pip
+    vm_shell_args: "install ansible jupyter ansible-kernel pyvmomi"
+
+- name: Check Install python modules task.
+  vmware_vm_shell_wait:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_guest_os_username }}"
+    vm_password: "{{ jupyter_guest_os_password }}"
+    vm_shell: /usr/bin/pip
+    vm_shell_args: "install ansible jupyter ansible-kernel pyvmomi"
+
+- name: Create Guest OS user.
+  vmware_vm_shell:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_guest_os_username }}"
+    vm_password: "{{ jupyter_guest_os_password }}"
+    vm_shell: /usr/sbin/useradd
+    vm_shell_args: "{{ jupyter_create_guest_os_username }}"
+
+- name: Set Guest OS user password.
+  vmware_vm_shell:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_guest_os_username }}"
+    vm_password: "{{ jupyter_guest_os_password }}"
+    vm_shell: /usr/bin/echo
+    vm_shell_args: "{{ jupyter_create_guest_os_password }} | /usr/bin/passwd --stdin {{ jupyter_create_guest_os_username }}"
+
+- name: Jupyter Ansible Kernel install.
+  vmware_vm_shell:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_create_guest_os_username }}"
+    vm_password: "{{ jupyter_create_guest_os_password }}"
+    vm_shell: /usr/bin/python
+    vm_shell_args: "-m ansible_kernel.install"
+
+- name: git init.
+  vmware_vm_shell:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_create_guest_os_username }}"
+    vm_password: "{{ jupyter_create_guest_os_password }}"
+    vm_shell: /usr/bin/git
+    vm_shell_args: "init"
+
+- name: git remote add.
+  vmware_vm_shell:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_create_guest_os_username }}"
+    vm_password: "{{ jupyter_create_guest_os_password }}"
+    vm_shell: /usr/bin/git
+    vm_shell_args: "remote add origin https://github.com/sky-joker/ansible-vmware-learning-materials.git"
+
+- name: Enable git sparseCheckout.
+  vmware_vm_shell:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_create_guest_os_username }}"
+    vm_password: "{{ jupyter_create_guest_os_password }}"
+    vm_shell: /usr/bin/git
+    vm_shell_args: "config core.sparseCheckout true"
+
+- name: Add docs path to sparse-checkout file.
+  vmware_vm_shell:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_create_guest_os_username }}"
+    vm_password: "{{ jupyter_create_guest_os_password }}"
+    vm_shell: /usr/bin/echo
+    vm_shell_args: "'docs/' >> .git/info/sparse-checkout"
+
+- name: git pull ansible-vmware-learning-materials repo.
+  vmware_vm_shell:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_create_guest_os_username }}"
+    vm_password: "{{ jupyter_create_guest_os_password }}"
+    vm_shell: /usr/bin/git
+    vm_shell_args: "pull origin master"
+
+- name: Generate jupyter notebook config.
+  vmware_vm_shell:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_create_guest_os_username }}"
+    vm_password: "{{ jupyter_create_guest_os_password }}"
+    vm_shell: /bin/jupyter
+    vm_shell_args: "notebook --generate-config"
+
+- name: Add jupyter notebook config.
+  vmware_vm_shell:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_create_guest_os_username }}"
+    vm_password: "{{ jupyter_create_guest_os_password }}"
+    vm_shell: /bin/echo
+    vm_shell_args: "-e c.NotebookApp.ip = \\'*\\'\\\\nc.NotebookApp.open_browser = False >> .jupyter/jupyter_notebook_config.py"
+
+- name: Add jupyter notebook password.
+  vmware_vm_shell:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_create_guest_os_username }}"
+    vm_password: "{{ jupyter_create_guest_os_password }}"
+    vm_shell: /bin/python
+    vm_shell_args: -c "from notebook.auth import passwd; p=passwd(\"{{ jupyter_login_password }}\"); print('c.NotebookApp.password = u\\'%s\\'' % p)" >> .jupyter/jupyter_notebook_config.py
+
+- name: Start Jupyter notebook.
+  vmware_vm_shell:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_create_guest_os_username }}"
+    vm_password: "{{ jupyter_create_guest_os_password }}"
+    vm_shell: /bin/jupyter
+    vm_shell_args: "notebook &"
+
+- name: Enable auto start of Jupyter notebook.
+  vmware_vm_shell:
+    hostname: "{{ vcenter_ip }}"
+    username: "{{ vcenter_os_username }}"
+    password: "{{ vcenter_os_password }}"
+    validate_certs: no
+    vm_id: "{{ jupyter_vm_name }}"
+    vm_username: "{{ jupyter_guest_os_username }}"
+    vm_password: "{{ jupyter_guest_os_password }}"
+    vm_shell: /usr/bin/echo
+    vm_shell_args: "'su - jupyter -c \"jupyter notebook &\"' >> /etc/rc.d/rc.local && /usr/bin/chmod +x /etc/rc.d/rc.local"

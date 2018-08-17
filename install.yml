@@ -8,4 +8,4 @@
     - esxi-deploy
     - vcenter-deploy
     - vmware-params-settings
-    #wip: - jupyter-deploy
+    - jupyter-deploy

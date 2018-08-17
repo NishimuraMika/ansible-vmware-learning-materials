@@ -40,7 +40,6 @@ vcenter_deployment_datastore_name = "datastore1" # Storage name to deploy.
 vcenter_thin_disk_mode = true
 vcenter_size = "small" # Please refer to the vCenter Size
 vcenter_vm_name = "" # VM name.
-# wipe: vcenter_license = ""
 
 # vCenter(VCSA) OS Params.
 vcenter_os_username = "administrator@vsphere.local"
@@ -64,6 +63,30 @@ vcenter_ceip_enabled = false
 
 # vCenter Params.
 datacenter_name = ""
+# wipe: vcenter_license = ""
+
+# Linux ovf path to be deployed as VM.
+linux_ovf_path = "./deploy_files/linux_ovf/"
+
+# jupyter(Linux) VM Params.
+jupyter_vm_name = "jupyter"
+jupyter_cpu_core = ""
+jupyter_cpu_socket = ""
+jupyter_memory_mb = ""
+jupyter_deployment_networks = [{"name": "VM Network"}] # PortGroup name to attach.
+jupyter_deployment_datastore = "datastore1" # Storage name to deploy.
+
+# Jupyter(Linux) Guest OS Params.
+jupyter_guest_os_username = "root"
+jupyter_guest_os_password = ""
+jupyter_guest_nw_interface = "ens192"
+jupyter_guest_ip = ""
+jupyter_guest_prefix = ""
+jupyter_guest_gateway = ""
+jupyter_dns_servers = ""
+jupyter_create_guest_os_username = "jupyter"
+jupyter_create_guest_os_password = "password"
+jupyter_login_password = "password"
 
 # additional explanation
 # 

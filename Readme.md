@@ -2,7 +2,7 @@
 
 VMwareを使ってAnsibleを学習するための環境を準備するPlaybookや教材がまとまったリポジトリです。
 
-> 現状はベースESXi上にネストするSXiとvCenterをデプロイするところまでしかできません。
+> 環境構築までは可能ですが、教育用教材のコンテンツが現在ありません。
 
 ## 目的
 
@@ -148,44 +148,61 @@ VCSAをデプロイする時に設定するDNSサーバを構築してくださ�
 学習環境をデプロイするには `invneotry` ファイルを修正する必要がります。  
 以下は、inventoryファイルの説明です。
 
-|                項目               |                                   説明                                  |
-|-----------------------------------|-------------------------------------------------------------------------|
-| esxi_host                         | ベースESXiのIP又はホスト名                                              |
-| esxi_username                     | ベースESXiにログインするユーザー名                                      |
-| esxi_password                     | ベースESXiにログインするパスワード                                      |
-| esxi_ovf_path                     | ESXi OVFが保存されているディレクトリパス                                |
-| esxi_vm_name                      | デプロイするESXi VMの名前                                               |
-| esxi_cpu_core                     | デプロイするESXiのCPUコア数                                             |
-| esxi_cpu_socket                   | デプロイするESXiのCPUソケット数                                         |
-| esxi_memory_mb                    | デプロイするESXiのメモリ容量(MB)                                        |
-| esxi_deployment_networks          | デプロイするESXiが所属するPortGroup(dict型)                             |
-| esxi_deployment_datastore         | デプロイするESXiを保存するデータストア名                                |
-| esxi_guest_os_username            | デプロイするESXiのOSユーザー名(OVF作成時に設定したものを指定)           |
-| esxi_guest_os_password            | デプロイするESXiのOSパスワード(OVF作成時に設定したものを指定)           |
-| esxi_guest_ip                     | デプロイするESXiに設定するVMKernel IP                                   |
-| esxi_guest_netmask                | デプロイするESXiに設定するVMKernel IPのネットマスク                     |
-| esxi_guest_gateway                | デプロイするESXiに設定するデフォルトゲートウェイ                        |
-| vcenter_deploy_cmd_dir            | vCenterをデプロイするためのcliコマンドが保存されているディレクトリパス  |
-| vcenter_deployment_network_name   | デプロイするvCenterが所属するPortGroup                                  |
-| vcenter_deployment_datastore_name | デプロイするvCenterが保存されるデータストア名                           |
-| vcenter_thin_disk_mode            | デプロイするvCenterをthinでデプロイするかのモード                       |
-| vcenter_size                      | デプロイするvCenterのサイズ                                             |
-| vcenter_vm_name                   | デプロイするvCenterのVM名                                               |
-| vcenter_os_username               | デプロイするvCenterのOSユーザー名                                       |
-| vcenter_os_password               | デプロイするvCenterに設定するOSパスワード                               |
-| vcenter_ip_family                 | デプロイするvCenterのIPアドレスファミリー                               |
-| vcenter_ip_mode                   | デプロイするvCenterのIPモード                                           |
-| vcenter_ip                        | デプロイするvCenterに設定するIPアドレス                                 |
-| vcenter_prefix                    | デプロイするvCenterに設定するプレフィックス                             |
-| vcenter_dns_servers               | デプロイするvCenterに設定するDNSサーバ                                  |
-| vcenter_gateway                   | デプロイするvCenterに設定するゲートウェイ                               |
-| vcenter_hostname                  | デプロイするvCenterに設定するホスト名(IP or FQDN)                       |
-| vcenter_ntp_servers               | デプロイするvCenterに設定するNTPサーバ(無い場合はNullを指定)            |
-| vcenter_ssh_enable                | デプロイするvCenterのSSHサービス状態                                    |
-| psc_sso_password                  | SSOで使用する管理者パスワード                                           |
-| psc_sso_domain_name               | SSOで使用するドメイン                                                   |
-| vcenter_ceip_enabled              | [CEIP](https://www.vmware.com/jp/solutions/trustvmware/ceip.html)の状態 |
-| datacenter_name                   | デプロイしたvCenterに作成するデータセンター名                           |
+|                項目               |                                      説明                                      |
+|-----------------------------------|--------------------------------------------------------------------------------|
+| esxi_host                         | ベースESXiのIP又はホスト名                                                     |
+| esxi_username                     | ベースESXiにログインするユーザー名                                             |
+| esxi_password                     | ベースESXiにログインするパスワード                                             |
+| esxi_ovf_path                     | ESXi OVFが保存されているディレクトリパス                                       |
+| esxi_vm_name                      | デプロイするESXi VMの名前                                                      |
+| esxi_cpu_core                     | デプロイするESXiのCPUコア数                                                    |
+| esxi_cpu_socket                   | デプロイするESXiのCPUソケット数                                                |
+| esxi_memory_mb                    | デプロイするESXiのメモリ容量(MB)                                               |
+| esxi_deployment_networks          | デプロイするESXiが所属するPortGroup(dict型)                                    |
+| esxi_deployment_datastore         | デプロイするESXiを保存するデータストア名                                       |
+| esxi_guest_os_username            | デプロイするESXiのOSユーザー名(OVF作成時に設定したものを指定)                  |
+| esxi_guest_os_password            | デプロイするESXiのOSパスワード(OVF作成時に設定したものを指定)                  |
+| esxi_guest_ip                     | デプロイするESXiに設定するVMKernel IP                                          |
+| esxi_guest_netmask                | デプロイするESXiに設定するVMKernel IPのネットマスク                            |
+| esxi_guest_gateway                | デプロイするESXiに設定するデフォルトゲートウェイ                               |
+| vcenter_deploy_cmd_dir            | vCenterをデプロイするためのcliコマンドが保存されているディレクトリパス         |
+| vcenter_deployment_network_name   | デプロイするvCenterが所属するPortGroup                                         |
+| vcenter_deployment_datastore_name | デプロイするvCenterが保存されるデータストア名                                  |
+| vcenter_thin_disk_mode            | デプロイするvCenterをthinでデプロイするかのモード                              |
+| vcenter_size                      | デプロイするvCenterのサイズ                                                    |
+| vcenter_vm_name                   | デプロイするvCenterのVM名                                                      |
+| vcenter_os_username               | デプロイするvCenterのOSユーザー名                                              |
+| vcenter_os_password               | デプロイするvCenterに設定するOSパスワード                                      |
+| vcenter_ip_family                 | デプロイするvCenterのIPアドレスファミリー                                      |
+| vcenter_ip_mode                   | デプロイするvCenterのIPモード                                                  |
+| vcenter_ip                        | デプロイするvCenterに設定するIPアドレス                                        |
+| vcenter_prefix                    | デプロイするvCenterに設定するプレフィックス                                    |
+| vcenter_dns_servers               | デプロイするvCenterに設定するDNSサーバ                                         |
+| vcenter_gateway                   | デプロイするvCenterに設定するゲートウェイ                                      |
+| vcenter_hostname                  | デプロイするvCenterに設定するホスト名(IP or FQDN)                              |
+| vcenter_ntp_servers               | デプロイするvCenterに設定するNTPサーバ(無い場合はNullを指定)                   |
+| vcenter_ssh_enable                | デプロイするvCenterのSSHサービス状態                                           |
+| psc_sso_password                  | SSOで使用する管理者パスワード                                                  |
+| psc_sso_domain_name               | SSOで使用するドメイン                                                          |
+| vcenter_ceip_enabled              | [CEIP](https://www.vmware.com/jp/solutions/trustvmware/ceip.html)の状態        |
+| datacenter_name                   | デプロイしたvCenterに作成するデータセンター名                                  |
+| linux_ovf_path                    | Linux OVFが保存されているディレクトリパス                                      |
+| jupyter_vm_name                   | デプロイするJupyter VM名                                                       |
+| jupyter_cpu_core                  | デプロイするJupyter VMのCPUコア数                                              |
+| jupyter_cpu_socket                | デプロイするJupyter VMのCPUソケット数                                          |
+| jupyter_memory_mb                 | デプロイするJupyter VMのメモリ容量(MB)                                         |
+| jupyter_deployment_networks       | デプロイするJupyter VMが所属するPortGroup(dict型)                              |
+| jupyter_deployment_datastore      | デプロイするJupyter VMを保存するデータストア名                                 |
+| jupyter_guest_os_username         | デプロイするJupyter VMのOSユーザー名(OVF作成時に設定したものを指定)            |
+| jupyter_guest_os_password         | デプロイするJupyter VMのOSパスワード(OVF作成時に設定したものを指定)            |
+| jupyter_guest_nw_interface        | デプロイするJupyter VMでIPを設定するネットワークインターフェース名             |
+| jupyter_guest_ip                  | デプロイするJupyter VMに設定するIP                                             |
+| jupyter_guest_prefix              | デプロイするJupyter VMに設定するプレフィックす                                 |
+| jupyter_guest_gateway             | デプロイするJupyter VMに設定するゲートウェイ                                   |
+| jupyter_dns_servers               | デプロイするJupyter VMに設定するDNSサーバ                                      |
+| jupyter_create_guest_os_username  | デプロイしたJupyter VMに追加するユーザー名(jupyter notebookを起動するユーザー) |
+| jupyter_create_guest_os_password  | デプロイしたJupyter VMに追加したユーザーのパスワード                           |
+| jupyter_login_password            | Jupyter notebookにログインするパスワード                                       |
 
 **注意点**
 
