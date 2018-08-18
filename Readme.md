@@ -224,7 +224,7 @@ embedded_vCSA_on_ESXi.json  readme-de.txt        readme-fr.txt  readme-ko.txt  r
 `inventory` ファイル修正後に以下のコマンドを実行します。
 
 ```
-$ ansible-playbook install.yml -i invnetory
+$ ansible-playbook deploy_learning_enviroment.yml -i invnetory
 ```
 
 1回につき1学習テナントのデプロイが可能です。
